@@ -1,6 +1,10 @@
 ### Interstellar Transport System
 
     The solution has been implemented in Firebase, Angular and TypeScript.
+
+    To see the app, go to the following link:
+        https://interstellar-transport-system.web.app
+
     The GitHub respository may be found at:
         https://github.com/kaylemaclou/interstellar-transport-system
 
@@ -36,8 +40,9 @@
 
     An endpoint providing the shortest path between two planets, has been exposed
     from via a Firebase Functions, using an HTTP GET REST endpoint. Here is
-    the URI of the endpoint:
-    https://us-central1-interstellar-transport-system.cloudfunctions.net/getShortestPath
+    the URI of the endpoint that is used to obtain the shortest path between
+    planet "A" and planet "B":
+    https://us-central1-interstellar-transport-system.cloudfunctions.net/getShortestPath?from-planet=A&to-planet=B
 
 #### 6. Create a front end to capture the source and destination and then print the shortest path
 

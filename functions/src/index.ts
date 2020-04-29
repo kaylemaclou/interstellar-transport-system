@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as path from "path";
+import * as url from "url";
 import { Planet, Route, TrafficDelay } from "./model";
 import FirestoreCollection from "./FirestoreCollection/FirestoreCollection";
 import Graph from "./Graph/Graph";
@@ -12,7 +13,7 @@ const firestore = admin.firestore();
 const storage = admin.storage();
 
 // Exposes a REST endpoint, which determines the shortest path beween the two
-// planetsspecified in the query parameters.
+// planets specified in the query-string parameters.
 //
 export const getShortestPath = functions.https.onRequest(
   //TODO: Give the endpoint a proper REST-like name, e.g. "shortest-path".
@@ -20,6 +21,26 @@ export const getShortestPath = functions.https.onRequest(
   async (request, response) => {
     if (request.method === "GET") {
       try {
+        // obtain the query string parameters from the URL,
+        const queryStringParameters: object = url.parse(request.url, true)
+          .query;
+
+        // obtain the start planet from the request header,
+        //@ts-ignore
+        const fromPlanet: string = queryStringParameters["from-planet"];
+
+        // obtain the end planet from the request header,
+        //@ts-ignore
+        const toPlanet: string = queryStringParameters["to-planet"];
+
+        //TODO: Validate the start and end planets.
+
+        console.log("fromPlanet==========");
+        console.log(fromPlanet);
+
+        console.log("toPlanet==========");
+        console.log(toPlanet);
+
         // obtain the planets from Firestore,
         const planetsCollection = new FirestoreCollection<Planet>(
           firestore,
@@ -51,15 +72,17 @@ export const getShortestPath = functions.https.onRequest(
           )
         );
 
-        // find the shortest path between the specified planets,
-        let shortestPath: Array<Node<Planet>>;
-        shortestPath = planetsGraph.findShortestPath("A", "B'");
+        // find the shortest path between the specified start & end planets,
+        const shortestPath: Array<Node<Planet>> = planetsGraph.findShortestPath(
+          fromPlanet,
+          toPlanet
+        );
 
-        response.status(200).send(shortestPath);
         //TODO: Limit the depth of the JSON returned, to only the first level.
+        response.status(200).send(shortestPath);
       } catch (error) {
         response.status(500).send(error);
-        //TODO: Construct a more meaningful error message.
+        //TODO: Concatenate a more meaningful error message.
         console.log(error);
       }
     }
