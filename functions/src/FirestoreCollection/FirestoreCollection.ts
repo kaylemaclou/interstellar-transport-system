@@ -1,6 +1,6 @@
 import CsvFile from "./CsvFile";
 
-// Implements the functionality required for Firestore collections:
+// Implements the functionality required of a Firestore collections:
 export default class FirestoreCollection<T> {
   private firestore: any;
   private pathToCollection: string;
