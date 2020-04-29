@@ -18,24 +18,24 @@ export default class FirestoreCollection<T> {
     const jsonData: string = csvFile.toJSON(new typeClass());
 
     // deletes all the existing documents within the collection,
-    await this.deleteAll();
+    await this.deleteAllDocuments();
 
     // convert the JSON into a JavaScript array of objects of type T,
     const documents: Array<T> = JSON.parse(jsonData);
 
     // add the specified documents to the collection.
-    this.add(documents);
+    this.addDocuments(documents);
   }
 
   // Adds the specified list of documents to the collection:
-  add(documents: Array<T>) {
+  addDocuments(documents: Array<T>) {
     documents.map((document) =>
       this.firestore.collection(this.pathToCollection).add(document)
     );
   }
 
-  // Deletes all the existing documents within the collection:
-  async deleteAll() {
+  // Deletes all the currently existing documents within the collection:
+  async deleteAllDocuments() {
     // Get a new write batch,
     const batch = this.firestore.batch();
     // delete all the documents within the collection, as a batch.
@@ -48,5 +48,13 @@ export default class FirestoreCollection<T> {
         });
         await batch.commit();
       });
+  }
+
+  // Obtains all the documents within the collection:
+  async getAllDocuments() {
+    const query = await this.firestore.collection(this.pathToCollection).get();
+    const documents = await query.docs;
+    const data: Array<T> = documents.map((document: any) => document.data());
+    return data;
   }
 }
