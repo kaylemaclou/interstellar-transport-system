@@ -11,11 +11,13 @@ admin.initializeApp();
 const firestore = admin.firestore();
 const storage = admin.storage();
 
-//TODO: Give the endpoint a proper REST-like name, e.g. "shortest-path".
+// Exposes a REST endpoint, which determines the shortest path beween the two
+// planetsspecified in the query parameters.
+//
 export const getShortestPath = functions.https.onRequest(
+  //TODO: Give the endpoint a proper REST-like name, e.g. "shortest-path".
+  //
   async (request, response) => {
-    console.log(`CALLED getShortestPath at ${Date.now}`);
-
     if (request.method === "GET") {
       try {
         // obtain the planets from Firestore,
@@ -49,15 +51,15 @@ export const getShortestPath = functions.https.onRequest(
           )
         );
 
-        let shortestPath: Array<Node<Planet>>;
-
         // find the shortest path between the specified planets,
+        let shortestPath: Array<Node<Planet>>;
         shortestPath = planetsGraph.findShortestPath("A", "B'");
 
         response.status(200).send(shortestPath);
-        console.log(shortestPath);
+        //TODO: Limit the depth of the JSON returned, to only the first level.
       } catch (error) {
         response.status(500).send(error);
+        //TODO: Construct a more meaningful error message.
         console.log(error);
       }
     }
@@ -66,12 +68,14 @@ export const getShortestPath = functions.https.onRequest(
 
 // Handles the "finalize" event, which is triggered after a CSV data file is
 // uploaded to Firebase Storage:
+//
 export const importDataFromCsvFile = functions.storage
   .object()
   .onFinalize(onFinalizeHandler);
 
 // "Finalize" event handler, which takes a CSV data file and imports it into
 // its corresponding Firestore collection:
+//
 async function onFinalizeHandler(object: any) {
   // If a CSV file was uploaded:
   if (object.contentType === "text/csv") {
