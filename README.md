@@ -18,24 +18,26 @@
 #### 3. Expose the database using a RESTful Webservice
 
     Firestore provides implicit REST endpoints for CRUD operations on documents
-    (collections) stored within the database. For example, the Angular front-
+    (collections) stored within its database. For example, the Angular front-
     end application calls the default HTTP GET endpoint on the “Planets”
-    collection and then uses the data to populate dropdown boxes on the user-
-    interface. For more information on the default Firestore endpoints, go to
-    the following link:
+    collection and then uses the data to populate dropdown-boxes on the user-
+    interface. Here is the URI:
+    https://firestore.googleapis.com/v1/projects/interstellar-transport-system/databases/(default)/documents/planets
+
+    For more information on the built-in Firestore endpoints, refer to the documentation found at the following link:
     	https://firebase.google.com/docs/firestore/use-rest-api
 
 #### 4. Implement the algorithm
 
     The algorithm and data model are implemented within a Firebase Functions.
-    The shortest path is obtained using a recursive implementation of Dijkstra’s
-    algorithm.
+    The shortest path is obtained via a recursive implementation of Dijkstra’s algorithm.
 
 #### 5. Expose the algorithm using a Document Literal Web service
 
-    An endpoint proving the shortest path between two planets, has been exposed
-    from within a Firebase Functions, using an HTTP GET REST endpoint. Here is
+    An endpoint providing the shortest path between two planets, has been exposed
+    from via a Firebase Functions, using an HTTP GET REST endpoint. Here is
     the URI of the endpoint:
+    https://us-central1-interstellar-transport-system.cloudfunctions.net/getShortestPath
 
 #### 6. Create a front end to capture the source and destination and then print the shortest path
 

@@ -1,38 +1,43 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as path from "path";
-import FirestoreCollection from "./FirestoreCollection";
 import { Planet, Route, TrafficDelay } from "./model";
+import FirestoreCollection from "./FirestoreCollection/FirestoreCollection";
 
 admin.initializeApp();
 
 const firestore = admin.firestore();
 const storage = admin.storage();
 
-export const addRoute = functions.https.onRequest(async (request, response) => {
-  console.log("this is my nice message!!!");
-  if (request.method === "GET") {
-    //const newRoute = request.query.newRoute;
+//TODO: Give the endpoint a proper REST-like name, e.g. "shortest-path".
+export const getShortestPath = functions.https.onRequest(
+  async (request, response) => {
+    console.log("this is my nice message!!!");
+    if (request.method === "GET") {
+      //const newRoute = request.query.newRoute;
 
-    const routes = await firestore
-      .collection("routes")
-      .doc("olSl6JvhiP4uStUIH2pp");
+      const routes = await firestore
+        .collection("routes")
+        .doc("olSl6JvhiP4uStUIH2pp");
 
-    routes
-      .get()
-      .then((document) => response.send(document.data()))
-      .catch((error) => console.log(error));
+      routes
+        .get()
+        .then((document) => response.send(document.data()))
+        .catch((error) => console.log(error));
+    }
+    //else
+    //TODO: Handle errors elegantly.
   }
-  //else
-  //TODO: Handle errors elegantly.
-});
+);
 
+// Handles the "finalize" event, which is triggered after a CSV data file is
+// uploaded to Firebase Storage:
 export const importDataFromCsvFile = functions.storage
   .object()
   .onFinalize(onFinalizeHandler);
 
-// Handles the "finalize" event, which is triggered after a file is uploaded
-// to Firebase Storage:
+// "Finalize" event handler, which takes a CSV data file and imports it into
+// its corresponding Firestore collection:
 async function onFinalizeHandler(object: any) {
   // If a CSV file was uploaded:
   if (object.contentType === "text/csv") {
