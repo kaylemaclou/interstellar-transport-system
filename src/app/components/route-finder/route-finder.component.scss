@@ -12,38 +12,55 @@
   transform: rotateZ(2deg);
   box-shadow: 10px 10px 5px #aaaaaa;
   text-align: center;
-}
+  .header {
+    color: darkgray;
+    font-size: 18pt;
+    font-variant: small-caps;
+    font-weight: bolder;
+    font-stretch: extra-expanded;
+  }
 
-.header {
-  color: darkgray;
-  font-size: 18pt;
-  font-variant: small-caps;
-  font-weight: bolder;
-  font-stretch: extra-expanded;
-  margin-bottom: 1em;
-}
+  .fieldsContainer {
+    display: inline-block;
+    margin: 1.8em auto;
+    width: 74%;
+    min-width: 20em;
 
-.fieldsContainer {
-  display: inline-block;
-  margin: 0 auto;
-  width: 74%;
-  min-width: 20em;
-}
+    .fieldGroup {
+      background: gray;
+      display: block;
+      text-align: left;
+    }
+    .caption {
+      color: darkgray;
+      font-size: 11pt;
+      font-variant: small-caps;
+      font-weight: bolder;
+      font-stretch: extra-expanded;
+    }
 
-.fieldGroup {
-  background: gray;
-  display: block;
-  text-align: left;
-}
-.caption {
-  color: #333;
-  font-size: 11pt;
-  font-weight: bolder;
-}
+    .select {
+      font-family: Orbitron, "Courier New", Courier, monospace;
+      color: #0077d1;
+      font-size: 9pt;
+      font-weight: 900;
+      width: 9em;
+    }
+  }
 
-.select {
-  color: #0077d1;
-  font-size: 10pt;
-  font-weight: bolder;
-  width: 9em;
+  .routeSheduleTable {
+    margin: 0.3em auto;
+    width: 74%;
+    min-width: 20em;
+    text-align: center;
+    text-align: left;
+
+    .routeSheduleTableRow {
+      color: #004377;
+      font-family: Orbitron, "Courier New", Courier, monospace;
+      font-size: 10pt;
+      font-weight: 900;
+      margin: 0.1em;
+    }
+  }
 }
