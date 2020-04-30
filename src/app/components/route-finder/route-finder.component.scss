@@ -1,0 +1,49 @@
+.container {
+  height: 100%;
+  width: 38%;
+  min-height: 25em;
+  min-width: 18em;
+  margin: 0 auto;
+  border: red 4px #555;
+  background-color: gray;
+  border-radius: 25px;
+  padding: 1.2em;
+  transform: skewY(1deg);
+  transform: rotateZ(2deg);
+  box-shadow: 10px 10px 5px #aaaaaa;
+  text-align: center;
+}
+
+.header {
+  color: darkgray;
+  font-size: 18pt;
+  font-variant: small-caps;
+  font-weight: bolder;
+  font-stretch: extra-expanded;
+  margin-bottom: 1em;
+}
+
+.fieldsContainer {
+  display: inline-block;
+  margin: 0 auto;
+  width: 74%;
+  min-width: 20em;
+}
+
+.fieldGroup {
+  background: gray;
+  display: block;
+  text-align: left;
+}
+.caption {
+  color: #333;
+  font-size: 11pt;
+  font-weight: bolder;
+}
+
+.select {
+  color: #0077d1;
+  font-size: 10pt;
+  font-weight: bolder;
+  width: 9em;
+}

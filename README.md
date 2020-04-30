@@ -3,7 +3,7 @@
     The solution has been implemented in Firebase, Angular and TypeScript.
 
     To see the app, go to the following link:
-        https://interstellar-transport-system.web.app
+        https://interstellar-transport-system.firebaseapp.com
 
     The GitHub respository may be found at:
         https://github.com/kaylemaclou/interstellar-transport-system
@@ -48,4 +48,4 @@
 
     The front-end is implemented in Angular and has been uploaded to Firebase
     hosting, at the following link:
-    	https://interstellar-transport-system.web.app
+    	https://interstellar-transport-system.firebaseapp.com
