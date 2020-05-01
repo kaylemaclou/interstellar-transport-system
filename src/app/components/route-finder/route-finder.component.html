@@ -23,9 +23,11 @@
     </span>
   </div>
 
-  <div class="header" style="font-size: 14pt;">Schedule</div>
+  <div *ngIf="isRouteFound" class="header" style="font-size: 14pt;">
+    Schedule
+  </div>
 
-  <table class="routeSheduleTable">
+  <table *ngIf="isRouteFound" class="routeSheduleTable">
     <thead class="header" style="font-size: 10pt;">
       <tr>
         <th></th>
@@ -34,21 +36,40 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="routeSheduleTableRow">
-        <td><span class="reddot"></span></td>
-        <td>Earth</td>
-        <td>123 ly</td>
-      </tr>
-      <tr class="routeSheduleTableRow">
-        <td><span class="reddot"></span></td>
-        <td>Moon</td>
-        <td>456 ly</td>
-      </tr>
-      <tr class="routeSheduleTableRow">
-        <td><span class="reddot"></span></td>
-        <td>Other XYZ</td>
-        <td>789 ly</td>
+      <tr *ngFor="let planetNode of shortestRoute" class="routeSheduleTableRow">
+        <td><span class="planetDot"></span></td>
+        <td>{{ planetNode.planetName }}</td>
+        <td>
+          {{
+            planetNode.distanceFromSource
+              ? planetNode.distanceFromSource.toFixed(2) + " ly"
+              : "DEPART"
+          }}
+        </td>
       </tr>
     </tbody>
   </table>
+
+  <div *ngIf="!isRouteFound && shortestRoute.length > 0" class="noRouteFound">
+    Sorry! No route found.
+  </div>
+
+  <div
+    *ngIf="
+      !isRouteFound &&
+      shortestRoute.length === 0 &&
+      fromPlanet.value &&
+      toPlanet.value &&
+      fromPlanet.value !== toPlanet.value
+    "
+    class="findingRoute blinking"
+  >
+    <img
+      src="../../../assets/rocket-launch-loading.gif"
+      alt=""
+      style="width: 5em; height: 5em;"
+    />
+    <br />
+    Finding route. Please wait ...
+  </div>
 </div>

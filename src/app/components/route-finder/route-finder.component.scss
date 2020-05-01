@@ -53,7 +53,6 @@
     margin: 0.3em auto;
     width: 74%;
     min-width: 20em;
-    text-align: center;
     text-align: left;
 
     .routeSheduleTableRow {
@@ -63,14 +62,54 @@
       font-weight: 900;
       margin: 0.1em;
 
-      .reddot {
-        color: red;
+      .planetDot {
         height: 25px;
         width: 25px;
         background-color: #bbb;
         border-radius: 50%;
         display: inline-block;
       }
+    }
+  }
+
+  .noRouteFound {
+    color: #ff0000d2;
+    font-family: Orbitron, "Courier New", Courier, monospace;
+    font-size: 12pt;
+    font-weight: 900;
+    margin: 4em;
+    letter-spacing: 1px;
+  }
+
+  .findingRoute {
+    color: rgb(224, 224, 224);
+    font-family: Orbitron, "Courier New", Courier, monospace;
+    font-size: 8pt;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-align: center;
+    margin: 2em auto;
+  }
+
+  .blinking {
+    animation: blinkingText 1.2s infinite;
+  }
+
+  @keyframes blinkingText {
+    0% {
+      color: rgb(224, 224, 224);
+    }
+    49% {
+      color: gray;
+    }
+    60% {
+      color: transparent;
+    }
+    99% {
+      color: transparent;
+    }
+    100% {
+      color: lightgray;
     }
   }
 }

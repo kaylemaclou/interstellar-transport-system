@@ -10,11 +10,16 @@ import Node from "../../../../functions/src/Graph/Node";
   styleUrls: ["./route-finder.component.scss"],
 })
 export class RouteFinderComponent implements OnInit {
-  planets: Array<Planet> = new Array<Planet>();
+  planets: Array<Planet>;
+  shortestRoute: Array<Node<Planet>>;
+  isRouteFound: boolean = false;
   @ViewChild("fromPlanet") fromPlanetSelect: ElementRef;
   @ViewChild("toPlanet") toPlanetSelect: ElementRef;
 
-  constructor(private planetRoutesService: PlanetRoutesService) {}
+  constructor(private planetRoutesService: PlanetRoutesService) {
+    this.planets = new Array<Planet>();
+    this.shortestRoute = new Array<Node<Planet>>();
+  }
 
   ngOnInit(): void {
     // Populate the to and from Planets Select boxes with the list of planets.
@@ -31,8 +36,12 @@ export class RouteFinderComponent implements OnInit {
     const fromPlanet =
       fromPlanetSelect.options[fromPlanetSelect.selectedIndex].value;
     const toPlanet = toPlanetSelect.options[toPlanetSelect.selectedIndex].value;
-    console.log(fromPlanet);
-    console.log(toPlanet);
+
+    // indicate that a route has not been found, as yet;
+    this.isRouteFound = false;
+
+    // reset the route found array,
+    this.shortestRoute = new Array<Node<Planet>>();
 
     // do nothing, if both planets have NOT been selected:
     if (!(fromPlanet && toPlanet)) {
@@ -50,8 +59,17 @@ export class RouteFinderComponent implements OnInit {
     // obtain the shortest path/route between the two specified planets,
     this.planetRoutesService
       .getShortestPath(fromPlanet, toPlanet)
-      .subscribe((planetNodes: Array<Node<Planet>>) => {
-        console.log(planetNodes);
+      .subscribe((shortestRoute: Array<Node<Planet>>) => {
+        this.shortestRoute = shortestRoute;
+
+        // Determine if a route has been successfully found, by checking the
+        // start and end planets of the route that was found:
+        if (
+          this.shortestRoute[0]["planetNode"] === fromPlanet &&
+          shortestRoute[shortestRoute.length - 1]["planetNode"] === toPlanet
+        )
+          this.isRouteFound = true;
+        else this.isRouteFound = false;
       });
 
     //TODO: Implement proper error handling.
@@ -71,7 +89,7 @@ export class RouteFinderComponent implements OnInit {
         // ensure the list of planets remains sorted.
         this.planets.sort((a, b) => (a.planetName > b.planetName ? 1 : -1));
         //TODO: Move the above sort elsewhere, where it is only performed once,
-        // after ALL the planets have been loaded.
+        //      after ALL the planets have been loaded.
       });
     });
 

@@ -27,11 +27,9 @@ export class PlanetRoutesService {
     // make the call to the API and return the data.
     return this.http.get<Array<Node<Planet>>>(shortestPathUri).pipe(
       tap((data) => {
-        console.log(data);
         return data;
       })
     );
-
     //TODO: Implement proper error handling.
   }
 
@@ -47,6 +45,6 @@ export class PlanetRoutesService {
     return this.http
       .get<Response>(this.planetsUri)
       .pipe(map((response: Response) => response["documents"]));
-    //TODO: Do proper error handling.
+    //TODO: Implement proper error handling.
   }
 }
