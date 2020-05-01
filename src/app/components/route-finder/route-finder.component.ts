@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ViewChild, ElementRef } from "@angular/core";
 import { PlanetRoutesService } from "../../services/planet-routes.service";
 import { Planet } from "../../../../functions/src/model";
+import Node from "../../../../functions/src/Graph/Node";
 
 @Component({
   selector: "app-route-finder",
@@ -33,16 +34,27 @@ export class RouteFinderComponent implements OnInit {
     console.log(fromPlanet);
     console.log(toPlanet);
 
-    // if both planets have been selected:
-    if (fromPlanet && toPlanet) {
-      // if the same planets have been selected:
-      if (fromPlanet === toPlanet) {
-        alert(
-          "Can only find the shortest route between two different planets. Please select another planet."
-        );
-        return;
-      }
+    // do nothing, if both planets have NOT been selected:
+    if (!(fromPlanet && toPlanet)) {
+      return;
     }
+
+    // do nothing, if the same planets have been selected for both to and from:
+    if (fromPlanet === toPlanet) {
+      alert(
+        "The shortest route can only be found between two different planets. Please select another planet."
+      );
+      return;
+    }
+
+    // obtain the shortest path/route between the two specified planets,
+    this.planetRoutesService
+      .getShortestPath(fromPlanet, toPlanet)
+      .subscribe((planetNodes: Array<Node<Planet>>) => {
+        console.log(planetNodes);
+      });
+
+    //TODO: Implement proper error handling.
   }
 
   // Populates the to and from Planets Select boxes with the list of planets:
@@ -62,5 +74,7 @@ export class RouteFinderComponent implements OnInit {
         // after ALL the planets have been loaded.
       });
     });
+
+    //TODO: Implement proper error handling.
   }
 }

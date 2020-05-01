@@ -7,6 +7,11 @@ import FirestoreCollection from "./FirestoreCollection/FirestoreCollection";
 import Graph from "./Graph/Graph";
 import Node from "./Graph/Node";
 
+// enable CORS middleware.
+const cors = require("cors")({
+  origin: true,
+});
+
 admin.initializeApp();
 
 const firestore = admin.firestore();
@@ -16,69 +21,71 @@ const storage = admin.storage();
 // planets specified in the query-string parameters:
 //
 export const getShortestPath = functions.https.onRequest(
-  //TODO: Give the endpoint a proper REST-like name, e.g. "shortest-path".
+  //TODO: Give this endpoint a proper REST-like name, e.g. "shortest-path".
   //
   async (request, response) => {
-    if (request.method === "GET") {
-      try {
-        // obtain the query-string parameters from the URL,
-        const queryParameters: object = url.parse(request.url, true).query;
+    // Enable CORS using the `cors` express middleware.
+    return cors(request, response, async () => {
+      if (request.method === "GET") {
+        try {
+          // obtain the query-string parameters from the URL,
+          const queryParameters: object = url.parse(request.url, true).query;
 
-        // obtain the start planet from the query-string parameters,
-        //@ts-ignore
-        const fromPlanet: string = queryParameters["from-planet"];
+          // obtain the start planet from the query-string parameters,
+          //@ts-ignore
+          const fromPlanet: string = queryParameters["from-planet"];
 
-        // obtain the end planet from the query-string parameters,
-        //@ts-ignore
-        const toPlanet: string = queryParameters["to-planet"];
+          // obtain the end planet from the query-string parameters,
+          //@ts-ignore
+          const toPlanet: string = queryParameters["to-planet"];
+          //TODO: Check the validity of the start and end planets.
 
-        //TODO: Check the validity of the start and end planets.
+          // obtain all the planets from the Firestore database,
+          const planetsCollection = new FirestoreCollection<Planet>(
+            firestore,
+            "planets"
+          );
+          const planets = await planetsCollection.getAllDocuments();
 
-        // obtain all the planets from the Firestore database,
-        const planetsCollection = new FirestoreCollection<Planet>(
-          firestore,
-          "planets"
-        );
-        const planets = await planetsCollection.getAllDocuments();
+          // obtain all the routes from the Firestore database,
+          const routesCollection = new FirestoreCollection<Route>(
+            firestore,
+            "routes"
+          );
+          const routes = await routesCollection.getAllDocuments();
 
-        // obtain all the routes from the Firestore database,
-        const routesCollection = new FirestoreCollection<Route>(
-          firestore,
-          "routes"
-        );
-        const routes = await routesCollection.getAllDocuments();
+          // instantiate a graph of planets,
+          const planetsGraph = new Graph<Planet>();
 
-        // instantiate a graph of planets,
-        const planetsGraph = new Graph<Planet>();
+          // add the planet-nodes to the graph,
+          planets.map((planet) =>
+            planetsGraph.addNode(planet.planetNode, planet)
+          );
 
-        // add the planet-nodes to the graph,
-        planets.map((planet) =>
-          planetsGraph.addNode(planet.planetNode, planet)
-        );
+          // add the route-edges to the graph,
+          routes.map((route) =>
+            planetsGraph.addEdge(
+              route.planetOrigin,
+              route.planetDestination,
+              route.distance
+            )
+          );
 
-        // add the route-edges to the graph,
-        routes.map((route) =>
-          planetsGraph.addEdge(
-            route.planetOrigin,
-            route.planetDestination,
-            route.distance
-          )
-        );
+          // find the shortest path between the specified start & end planets,
+          let shortestPath: Array<Node<Planet>> = planetsGraph.findShortestPath(
+            fromPlanet,
+            toPlanet
+          );
 
-        // find the shortest path between the specified start & end planets,
-        const shortestPath: Array<Node<Planet>> = planetsGraph.findShortestPath(
-          fromPlanet,
-          toPlanet
-        );
-
-        //TODO: Limit the depth of the JSON returned, to only the first level.
-        response.status(200).send(shortestPath);
-      } catch (error) {
-        //TODO: Concatenate a more meaningful error message.
-        response.status(500).send(error);
-        console.log(error);
+          // //TODO: Limit the depth of the JSON returned, to only the first level.
+          response.status(200).send(shortestPath);
+        } catch (error) {
+          //TODO: Concatenate a more meaningful error message.
+          response.status(500).send(error);
+          console.log(error);
+        }
       }
-    }
+    });
   }
 );
 
@@ -96,7 +103,6 @@ async function onFinalizeHandler(object: any) {
   // If a CSV file was uploaded:
   if (object.contentType === "text/csv") {
     const fileName: any = path.basename(object.name || "");
-    console.log("fileName = ", fileName);
 
     try {
       // obtain the CSV file that was uploaded,
@@ -107,8 +113,6 @@ async function onFinalizeHandler(object: any) {
 
       // obtain the contents of the uploaded CSV file,
       const csvFileContents = csvFile.toString();
-
-      console.log("csvFileContents  = ", csvFileContents);
 
       // Import the uploaded CSV file into its associated Firestore collection:
       switch (fileName) {
