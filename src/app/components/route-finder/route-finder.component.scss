@@ -22,7 +22,7 @@
 
   .fieldsContainer {
     display: inline-block;
-    margin: 1.8em auto;
+    margin: 1.7em auto;
     width: 74%;
     min-width: 20em;
 
@@ -30,6 +30,7 @@
       background: gray;
       display: block;
       text-align: left;
+      padding-top: 2px;
     }
     .caption {
       color: darkgray;
@@ -44,7 +45,7 @@
       color: #0077d1;
       font-size: 9pt;
       font-weight: 900;
-      width: 9em;
+      width: 14em;
     }
   }
 
