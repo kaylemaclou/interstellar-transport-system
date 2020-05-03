@@ -33,12 +33,6 @@ export class PlanetRoutesService {
     //TODO: Implement proper error handling.
   }
 
-  // getGames(): Observable<IGame[]> {
-  //   return this.http.get<IGame[]>(this.gameUrl).pipe(
-  //       tap(data => console.log('All: ' + JSON.stringify(data))),
-  //       catchError(this.handleError)
-  //   );
-
   // Obtains the list of Planet Documents, from the Firestore NoSql database's
   // Planets collection, via the default REST GET endpoint:
   getPlanets(): Observable<any> {
